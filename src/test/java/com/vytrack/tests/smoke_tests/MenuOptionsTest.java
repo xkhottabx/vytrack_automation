@@ -1,117 +1,70 @@
 package com.vytrack.tests.smoke_tests;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import com.vytrack.pages.DashboardPage;
+import com.vytrack.pages.LoginPage;
+import com.vytrack.tests.TestBase;
+import com.vytrack.utilities.ConfigurationReader;
 import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.*;
 import org.testng.asserts.SoftAssert;
-
 import static com.vytrack.utilities.Variables.*;
-import static com.vytrack.utilities.LogInLogOut.*;
 
-
-public class MenuOptionsTest {
+public class MenuOptionsTest extends TestBase {
 
     SoftAssert softAssertion = new SoftAssert();
 
-    @BeforeClass
-    public void preCondition() {
-        WebDriverManager.chromedriver().setup();
-    }
-
     @BeforeMethod
-    public void setUp() {
-        driver = new ChromeDriver();
-
+    public void setUpMethod2(){
+        driver.get(ConfigurationReader.get("url"));
     }
-
-    @AfterMethod
-    public void tearDown(){
-       driver.quit();
-    }
-
-
-
 
     @Test
-    public void test01_MenuOptionsDriver() throws InterruptedException {
-        logIn("user13","UserUser123");
-        driver.findElement(By.className(fleetClassName)).click();//FLEET
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[1]/div/div/ul/li[3]/a/span")).click();//VEHICLES
-        Thread.sleep(6000);
+    public void test01_MenuOptionsDriver() {
+        LoginPage loginPage=new LoginPage();
+        loginPage.login(ConfigurationReader.get("driver_username"), ConfigurationReader.get("driver_password"));
+        DashboardPage dashboardPage=new DashboardPage();
+        dashboardPage.selectMenuOption("Fleet", "Vehicles");
         softAssertion.assertEquals(driver.getTitle(), "Car - Entities - System - Car - Entities - System");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "Cars");
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[2]/a/span")).click();//CUSTOMERS
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[2]/div/div/ul/li[3]/a/span")).click();//ACCOUNTS
-        Thread.sleep(2000);
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "Cars");
+        dashboardPage.selectMenuOption("Customers", "Accounts");
         softAssertion.assertEquals(driver.getTitle(), "Accounts - Customers");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "Accounts");
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[2]/a/span")).click();//CUSTOMERS
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[2]/div/div/ul/li[4]/a/span")).click();//CONTACTS
-        Thread.sleep(2000);
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "Accounts");
+        dashboardPage.selectMenuOption("Customers", "Contacts");
         softAssertion.assertEquals(driver.getTitle(), "Contacts - Customers");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "Contacts");
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[3]")).click();//ACTIVITIES
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[3]/div/div/ul/li[3]/a/span")).click();//CALENDAR EVENTS
-        Thread.sleep(2000);
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "Contacts");
+        dashboardPage.selectMenuOption("Activities", "Calendar Events");
         softAssertion.assertEquals(driver.getTitle(), "Calendar Events - Activities");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "Calendar Events");
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "Calendar Events");
 
         softAssertion.assertAll();
     }
 
     @Test
-    public void test02_MenuOptionsStoreManager() throws InterruptedException {
-
-        logIn("storemanager60","UserUser123");
-
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[1]/a/span")).click();//DASHBOARDS
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[1]/div/div/ul/li[3]/a/span")).click();//DASHBOARD
-        Thread.sleep(3000);
+    public void test02_MenuOptionsStoreManager() {
+        LoginPage loginPage=new LoginPage();
+        loginPage.login(ConfigurationReader.get("storemanager_username"), ConfigurationReader.get("storemanager_password"));
+        DashboardPage dashboardPage=new DashboardPage();
+        dashboardPage.selectMenuOption("Dashboards", "Dashboard");
         softAssertion.assertEquals(driver.getTitle(), "Dashboard - Dashboards");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "Dashboard");
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[2]/a/span")).click();//FLEET
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[2]/div/div/ul/li[3]/a/span")).click();//VEHICLES
-        Thread.sleep(2000);
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "Dashboard");
+        dashboardPage.selectMenuOption("Fleet", "Vehicles");
         softAssertion.assertEquals(driver.getTitle(), "All - Car - Entities - System - Car - Entities - System");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "All Cars");
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[3]/a/span")).click();//CUSTOMERS
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[3]/div/div/ul/li[3]/a/span")).click();//ACCOUNTS
-        Thread.sleep(2000);
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "All Cars");
+        dashboardPage.selectMenuOption("Customers", "Accounts");
         softAssertion.assertEquals(driver.getTitle(), "All - Accounts - Customers");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "All Accounts");
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[3]/a/span")).click();//CUSTOMERS
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[3]/div/div/ul/li[4]/a/span")).click();//CONTACTS
-        Thread.sleep(4000);
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "All Accounts");
+        dashboardPage.selectMenuOption("Customers", "Contacts");
         softAssertion.assertEquals(driver.getTitle(), "All - Contacts - Customers");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "All Contacts");
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[4]/a/span")).click();//SALES
-
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[4]/div/div/ul/li[3]/a/span")).click();//OPPORTUNITIES
-        Thread.sleep(2000);
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "All Contacts");
+        dashboardPage.selectMenuOption("Sales", "Opportunities");
         softAssertion.assertEquals(driver.getTitle(), "Open Opportunities - Opportunities - Sales");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "Open Opportunities");
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[5]/a/span")).click();//ACTIVITIES
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[5]/div/div/ul/li[3]/a/span")).click();//CALLS
-        Thread.sleep(2000);
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "Open Opportunities");
+        dashboardPage.selectMenuOption("Activities", "Calls");
         softAssertion.assertEquals(driver.getTitle(), "All - Calls - Activities");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "All Calls");
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[5]/a/span")).click();//ACTIVITIES
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"main-menu\"]/ul/li[5]/div/div/ul/li[4]/a/span")).click();//CALENDAR EVENTS
-        Thread.sleep(2000);
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "All Calls");
+        dashboardPage.selectMenuOption("Activities", "Calendar Events");
         softAssertion.assertEquals(driver.getTitle(), "All - Calendar Events - Activities");
-        softAssertion.assertEquals(driver.findElement(By.className(pageClassName)).getText(), "All Calendar Events");
+        softAssertion.assertEquals(driver.findElement(By.className(PAGE_CLASS_NAME)).getText(), "All Calendar Events");
 
         softAssertion.assertAll();
 
